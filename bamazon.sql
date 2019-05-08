@@ -15,23 +15,21 @@ CREATE TABLE products(
     PRIMARY KEY(item_id)
 );
 
-INSERT INTO Products(ProductName, DepartmentName, Price, StockQuantity)
+INSERT INTO Products(product_name, department_name, price, stock_quantity, product_sales)
 VALUES 
-    ("Eggs", "grocery", 1.99, 12),
-    ('Dove Conditioner', 'Cosmetics', 6.25, 627),
-    ('Granny Smith Apples', 'Produce', 0.35, 800),
-    ("Horizen Milk", "grocery", 6.99, 24),
-    ("Sony Playstation 4", "electronics", 199.99, 5),
-    ("Microsoft Xbox 1 ", "electronics", 179.99, 7),
-    ("iPad", "electronics", 399.99, 18),
-    ("Bicycle", "sporting goods", 599.99, 2),
-    ("Football", "sporting goods", 9.99, 49),
-    ("Harry Potter and Chamber of Secrets", "books", 9.99, 69),
-    ("Game of Thrones", "books", 19.99, 33),
-    ("Fight Club", "books", 11.99, 6),
-    ("Fight Club", "dvds", 13.99, 36),  
-    ("Office Space", "dvds", 9.99, 21),
-    ("Dark Side of the Moon", "music", 11.55, 15);
+    ("Eggs", "grocery", 1.99, 12, 0.0),
+    ("Horizen Milk", "grocery", 6.99, 24, 0.0),
+    ("Sony Playstation 4", "electronics", 199.99, 5, 0.0),
+    ("Microsoft Xbox 1 ", "electronics", 179.99, 7, 0.0),
+    ("iPad", "electronics", 399.99, 18, 0.0),
+    ("Bicycle", "sporting goods", 599.99, 2, 0.0),
+    ("Football", "sporting goods", 9.99, 49, 0.0),
+    ("Harry Potter and Chamber of Secrets", "books", 9.99, 69, 0.0),
+    ("Game of Thrones", "books", 19.99, 33, 0.0),
+    ("Fight Club", "books", 11.99, 6, 0.0),
+    ("Fight Club", "dvds", 13.99, 36, 0.0),  
+    ("Office Space", "dvds", 9.99, 21, 0.0),
+    ("Dark Side of the Moon", "music", 11.55, 15, 0.0);
 
 CREATE TABLE Departments(
     DepartmentID INTEGER AUTO_INCREMENT PRIMARY KEY,
