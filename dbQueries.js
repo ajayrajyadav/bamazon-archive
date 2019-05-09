@@ -1,6 +1,7 @@
 const dbConnection = require('./dbConnection');
 
 function selectAllRecords(queryParams, callback) {
+    console.log(queryParams)
   dbConnection.query(queryParams, callback);
 }
 

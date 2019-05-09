@@ -5,6 +5,7 @@ var inquirer = require("inquirer");
 var colors = require("colors/safe")
 var table = require('cli-table');
 const dbQueries = require('./dbQueries');
+const userInput = require('./userInput');
 
 var l = console.log;
 let items = [];
@@ -17,6 +18,7 @@ var connection = mysql.createConnection({
     database: process.env.DB_SCHEMA
 });
 
+connection.connect();
 main();
 
 function main(){
@@ -25,7 +27,7 @@ function main(){
 }
 
 function displayInventory(callback){
-    connection.connect();
+    
 
     // dbQueries.selectAllRecords(function(error, data){
     //     printTable(data);
@@ -39,7 +41,7 @@ function displayInventory(callback){
         items = result;
        printTable(result);
     });
-    connection.end();
+    // connection.end();
 }
 
 function printTable(result){
@@ -62,41 +64,32 @@ function printTable(result){
 }
 
 function purchase(){
-    getNewItem()
+    userInput
+    .getWhatUserWantToBuy()
     .then(updateQty)
 }
 
-function getNewItem() {
-    return inquirer.prompt([
-		{
-			type: 'input',
-			name: 'item_id',
-			message: 'Please enter the Item ID which you would like to purchase.',
-			validate: validateInput,
-			filter: Number
-		},
-		{
-			type: 'input',
-			name: 'quantity',
-			message: 'How many do you need?',
-			validate: validateInput,
-			filter: Number
-		}
-	]);
-  }
-
-function validateInput(value){
-    var integer = Number.isInteger(parseFloat(value));
-	var sign = Math.sign(value);
-
-	if (integer && (sign === 1)) {
-		return true;
-	} else {
-		return "Please enter a whole non-zero number.";
-	}
-}
-
 function updateQty(value){
-    l(value.item_id)
-    
+    l(value)
+    // connection.connect();
+    connection.query("SELECT * FROM products WHERE item_id=?", value.item_id, function(err, result){
+        if(err){
+            l(err, "that item doesnt exist")
+        }
+        else if(result[0].stock_quantity< value.quantity){
+            l("That product is out of stock, please pick again. \n")
+            main();
+        }else if(result[0].stock_quantity >= value.quantity){
+            l(value.quantity + " items purchased of " + result[0].product_name + " at $"+ result[0].price)
+            var saleTotal = result[0].price * value.quantity;
+            l("Your Total is $"+ saleTotal)
+            let newQty = result[0].stock_quantity - value.quantity;
+            connection.query("UPDATE products SET stock_quantity= "+ newQty +" WHERE item_id= "+ value.item_id, function(err,resulttwo){
+                if(err) l("error " + err)
+                return resulttwo;
+            })
+        }
+    })
+    displayInventory();
+    // connection.end();
 }
