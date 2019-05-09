@@ -82,7 +82,7 @@ function getNewItem() {
 			validate: validateInput,
 			filter: Number
 		}
-	])
+	]);
   }
 
 function validateInput(value){
@@ -96,18 +96,7 @@ function validateInput(value){
 	}
 }
 
-function updateQty(itemNumber){
-    l(itemNumber)
-    inquirer
-    .prompt({
-        type: "input",
-        name: "purchaseAmount",
-        message: "how many would you like to purchase?",
-        default: function(){
-            return '1';
-        }
-    }).then(function(itemQty){
-        l(itemQty);
-        
-    })
+function updateQty(value){
+    l(value.item_id)
+    
 }
