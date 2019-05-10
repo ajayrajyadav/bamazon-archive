@@ -41,7 +41,9 @@ function getAllProdcts(query, continuation){
     })
 }
 
-function findSingleItemWithID
+// function findSingleItemWithID(query, continuation){
+
+// }
 
 module.exports = {
     connectToDB: connectToDB,

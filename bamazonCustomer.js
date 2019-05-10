@@ -23,23 +23,23 @@ var connection = mysql.createConnection({
 database.connectToDB(main);
 // main();
 
-function main(){
+function main() {
     displayInventory();
     // purchase();
 }
 
-function displayInventory(callback){
+function displayInventory(callback) {
     database.getAllProdcts("SELECT item_id, product_name, price FROM Products", errorOrDisplay)
 }
 function errorOrDisplay(error, results) {
     if (error) {
-      throw new Error('An error occurred while loading auction items');
+        throw new Error('An error occurred while loading auction items');
     } else {
         printTable(results);
     }
-  }
+}
 
-function printTable(result){
+function printTable(result) {
     var displayTable = new table({
         head: ["Item ID#", "Product Name", "Price"],
         style: {
@@ -60,32 +60,44 @@ function printTable(result){
     purchase();
 }
 
-function purchase(){
+function purchase() {
     userInput
-    .getWhatUserWantToBuy()
-    .then(updateQty)
+        .getWhatUserWantToBuy()
+        .then(queryDatabaseForSingleItem)
 }
 
-function updateQty(value){
-    // connection.connect();
-    connection.query("SELECT * FROM products WHERE item_id=?", value.item_id, function(err, result){
-        if(err){
-            l(err, "that item doesnt exist")
-        }
-        else if(result[0].stock_quantity< value.quantity){
-            l("That product is out of stock, please pick again. \n")
-            main();
-        }else if(result[0].stock_quantity >= value.quantity){
-            l(value.quantity + " items purchased of " + result[0].product_name + " at $"+ result[0].price)
-            var saleTotal = result[0].price * value.quantity;
-            l("Your Total is $"+ saleTotal)
-            let newQty = result[0].stock_quantity - value.quantity;
-            connection.query("UPDATE products SET stock_quantity= "+ newQty +" WHERE item_id= "+ value.item_id, function(err,resulttwo){
-                if(err) l("error " + err)
-                return resulttwo;
-            })
+function queryDatabaseForSingleItem(value) {
+    let queryString = "SELECT * FROM products WHERE item_id=" + value.item_id
+    database.getAllProdcts(queryString, function (error, results) {
+        if (error) {
+            throw new Error('An error occurred while searching for that item');
+        } else {
+            updateStock(results, value);
         }
     })
-    displayInventory();
-    // connection.end();
+}
+
+function updateStock(result, value) {
+    if (result[0].stock_quantity < value.quantity) {
+        l("That product is out of stock, please pick again. \n")
+        main();
+    } else if (result[0].stock_quantity >= value.quantity) {
+        l(value.quantity + " items purchased of " + result[0].product_name + " at $" + result[0].price)
+        var saleTotal = result[0].price * value.quantity;
+        l("Your Total is $" + saleTotal)
+        let newQty = result[0].stock_quantity - value.quantity;
+        updateStockInDatabase(newQty, value);
+    }
+
+}
+
+function updateStockInDatabase(newQty, value) {
+    let queryString = "UPDATE products SET stock_quantity= "+ newQty +" WHERE item_id= "+ value.item_id;
+    database.getAllProdcts(queryString, function (error, results) {
+        if (error) {
+            throw new Error();
+        } else {
+            main();
+        }
+    })
 }
