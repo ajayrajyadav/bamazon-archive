@@ -34,12 +34,14 @@ function insertNewProduct(tableName, product, continuation){
 }
 
 function getAllProdcts(query, continuation){
-    
     connection.query(query, function(err,results){
         if(err) throw err;
+
         continuation(err,results);
     })
 }
+
+function findSingleItemWithID
 
 module.exports = {
     connectToDB: connectToDB,

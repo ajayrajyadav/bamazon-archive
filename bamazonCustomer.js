@@ -6,6 +6,7 @@ var colors = require("colors/safe")
 var table = require('cli-table');
 const dbQueries = require('./dbQueries');
 const userInput = require('./userInput');
+const database = require('./database');
 
 var l = console.log;
 let items = [];
@@ -18,31 +19,25 @@ var connection = mysql.createConnection({
     database: process.env.DB_SCHEMA
 });
 
-connection.connect();
-main();
+// connection.connect();
+database.connectToDB(main);
+// main();
 
 function main(){
     displayInventory();
-    purchase();
+    // purchase();
 }
 
 function displayInventory(callback){
-    
-
-    // dbQueries.selectAllRecords(function(error, data){
-    //     printTable(data);
-    //     callback(error, data)
-    // })
-
-    connection.query("SELECT item_id, product_name, price FROM Products", function(err, result){
-        if(err){
-            l(err);
-        }
-        items = result;
-       printTable(result);
-    });
-    // connection.end();
+    database.getAllProdcts("SELECT item_id, product_name, price FROM Products", errorOrDisplay)
 }
+function errorOrDisplay(error, results) {
+    if (error) {
+      throw new Error('An error occurred while loading auction items');
+    } else {
+        printTable(results);
+    }
+  }
 
 function printTable(result){
     var displayTable = new table({
@@ -59,8 +54,10 @@ function printTable(result){
             [result[i].item_id, result[i].product_name, result[i].price]
         )
     }
+    l("\n")
     l(displayTable.toString());
     l("\n")
+    purchase();
 }
 
 function purchase(){
@@ -70,7 +67,6 @@ function purchase(){
 }
 
 function updateQty(value){
-    l(value)
     // connection.connect();
     connection.query("SELECT * FROM products WHERE item_id=?", value.item_id, function(err, result){
         if(err){
