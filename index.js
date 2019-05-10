@@ -1,38 +1,33 @@
-const dbQueries = require('./dbQueries');
-const mainMenu = require('./mainMenu');
-const addItem = require('./addItem');
+const database = require('./database');
+const userInput = require('./userInput');
+const bamazonCustomer = require("./bamazonCustomer");
 
+database.connectToDB(start);
 
-function selectAllRecords(callback) {
-  dbQueries.selectAllRecords(function(error, data) {
-    console.log(data);
-
-    callback(error, data);
-  });
+function start() {
+    userInput
+        .getStartMenuSelection()
+        .then(callFunctionsORExit);
 }
 
-function showCustomerModule(callback) {
-  customerModule.displayNewItemMenu(callback);
+function callFunctionsORExit(answer) {
+    if (answer.postOrBid === "Customer") {
+        callBamazonCustomer();
+        // start();
+    } else if (answer.postOrBid === "Exit") {
+        exit;
+    }
 }
 
-function exit(callback) {
-  callback(null, null);
-  process.exit();
+function callBamazonCustomer() {
+    bamazonCustomer.displayInventory();
 }
 
-const menuOptions = {
-  'Customer': customerModule,
-  'Manager': selectAllRecords,
-  'Executive': hand-coded,
-  'Exit': exit
-};
-
-function showMainMenu(error) {
-  if(error) {
-    console.log(error);
-  } else {
-    mainMenu.showMainMenu(menuOptions, showMainMenu);
-  }
+function exit() {
+    database.endConnection();
+    process.exit();
 }
 
-showMainMenu();
+module.exports = {
+    start: start
+  };

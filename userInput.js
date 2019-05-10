@@ -1,5 +1,15 @@
 var inquirer = require("inquirer");
 
+function getStartMenuSelection() {
+    return inquirer
+      .prompt({
+        name: "postOrBid",
+        type: "list",
+        message: "Welcome to Bamazon, what portal would you like to access?",
+        choices: ["Customer", "Manager", "Executive", "Exit"]
+      });
+  }
+
 function getWhatUserWantToBuy(){
     return inquirer.prompt([
 		{
@@ -31,6 +41,6 @@ function validateInput(value){
 }
 
 module.exports = {
-    // getStartMenuSelection: getStartMenuSelection,
+    getStartMenuSelection: getStartMenuSelection,
     getWhatUserWantToBuy: getWhatUserWantToBuy,
   };

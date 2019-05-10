@@ -7,6 +7,7 @@ var table = require('cli-table');
 const dbQueries = require('./dbQueries');
 const userInput = require('./userInput');
 const database = require('./database');
+const index = require("./index")
 
 var l = console.log;
 let items = [];
@@ -20,7 +21,7 @@ var connection = mysql.createConnection({
 });
 
 // connection.connect();
-database.connectToDB(main);
+// database.connectToDB(main);
 // main();
 
 function main() {
@@ -57,6 +58,7 @@ function printTable(result) {
     l("\n")
     l(displayTable.toString());
     l("\n")
+    
     purchase();
 }
 
@@ -96,8 +98,14 @@ function updateStockInDatabase(newQty, value) {
     database.getAllProdcts(queryString, function (error, results) {
         if (error) {
             throw new Error();
-        } else {
-            main();
+        } 
+        else {
+            // index.start();
         }
     })
 }
+
+module.exports = {
+    displayInventory : displayInventory,
+    purchase : purchase
+  };
