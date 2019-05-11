@@ -30,4 +30,4 @@ function exit() {
 
 module.exports = {
     start: start
-  };
+};

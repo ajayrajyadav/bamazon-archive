@@ -4,7 +4,6 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var colors = require("colors/safe")
 var table = require('cli-table');
-const dbQueries = require('./dbQueries');
 const userInput = require('./userInput');
 const database = require('./database');
 const index = require("./index")
@@ -24,10 +23,10 @@ var connection = mysql.createConnection({
 // database.connectToDB(main);
 // main();
 
-function main() {
-    displayInventory();
-    // purchase();
-}
+// function main() {
+//     displayInventory();
+//     // purchase();
+// }
 
 function displayInventory(callback) {
     database.getAllProdcts("SELECT item_id, product_name, price FROM Products", errorOrDisplay)
@@ -101,6 +100,7 @@ function updateStockInDatabase(newQty, value) {
         } 
         else {
             // index.start();
+            //I need to go back to index.start, and I am not sure how to get back there...
         }
     })
 }
